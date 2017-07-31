@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created  on 7/31/2017.
  */
@@ -38,7 +40,7 @@ public class Book {
     }
 
     // Returns a Book given the expected JSON
-    public static Book fromJson(JSONObject jsonObject) {
+    private static Book fromJson(JSONObject jsonObject) {
         Book book = new Book();
         try {
             // Deserialize json into object fields
@@ -71,5 +73,23 @@ public class Book {
         } catch (JSONException e) {
             return "";
         }
+    }
+
+    public static ArrayList<Book> fromJson(JSONArray jsonArray) {
+        ArrayList<Book> books = new ArrayList<Book>(jsonArray.length());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject bookJson;
+            try {
+                bookJson = jsonArray.getJSONObject(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+            Book book = Book.fromJson(bookJson);
+            if (book != null) {
+                books.add(book);
+            }
+        }
+        return books;
     }
 }
