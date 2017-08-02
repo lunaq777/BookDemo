@@ -3,7 +3,6 @@ package com.example.lucky.bookdemo;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +18,9 @@ import java.util.List;
  */
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
-
     private Context mContext;
     private List<Book> mBooks;
+    private ClickListener clickListener;
 
     public BookAdapter(Context context, List<Book> booksList) {
         this.mBooks = booksList;
@@ -48,15 +47,31 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     @Override
-    public void onBindViewHolder(BookViewHolder holder, int position) {
+    public void onBindViewHolder(final BookViewHolder holder, final int position) {
         Book book = mBooks.get(position);
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
         Picasso.with(mContext).load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(holder.ivCover);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) {
+                    clickListener.onClickedItem(holder.itemView, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return null != mBooks ? mBooks.size() : 0;
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    interface ClickListener {
+        void onClickedItem(View v, int position);
     }
 }

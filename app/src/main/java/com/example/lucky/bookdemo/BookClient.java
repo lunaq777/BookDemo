@@ -22,7 +22,7 @@ public class BookClient {
         return API_BASE_URL + relativeUrl;
     }
 
-    // Method for accessing the search API
+    // Accessing the search API
     public void getBooks(final String query, JsonHttpResponseHandler handler) {
         try {
             String url = getApiUrl("search.json?q=");
@@ -31,4 +31,11 @@ public class BookClient {
             e.printStackTrace();
         }
     }
+
+    // Accessing books API to get publisher and no. of pages in a book.
+    public void getExtraBookDetails(String openLibraryId, JsonHttpResponseHandler handler) {
+        String url = getApiUrl("books/");
+        client.get(url + openLibraryId + ".json", handler);
+    }
+
 }
